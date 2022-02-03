@@ -1,4 +1,4 @@
-const http = require('http')
+const https = require('https')
 const crypto = require('crypto')
 var qs = require('querystring');
 
@@ -13,7 +13,7 @@ function generateSignature(apiKey, apiSecret, meetingNumber, role) {
 
  // server
 const hostname = '127.0.0.1'
-const server = http.createServer((request, response) => {
+const server = https.createServer((request, response) => {
 	let data, API_KEY, API_SECRET, meet_number, role_id;
 
 	// загрузка данных
@@ -40,7 +40,7 @@ const server = http.createServer((request, response) => {
 	});
 })
 server.listen(process.env.PORT || 5000, hostname, () => {
-	console.log(`Server running at http://${hostname}:${process.env.PORT || 5000}/`)
+	console.log(`Server running at https://${hostname}:${process.env.PORT || 5000}/`)
 })
 
 
