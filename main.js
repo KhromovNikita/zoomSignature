@@ -36,7 +36,7 @@ const server = http.createServer((request, response) => {
 	});
 })
 server.listen(process.env.PORT || 5000, hostname, () => {
-	console.log(`Server running at http://${hostname}:${port}/`)
+	console.log(`Server running at http://${hostname}:${process.env.PORT}/`)
 })
 
 
