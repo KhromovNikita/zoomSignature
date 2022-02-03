@@ -9,10 +9,10 @@
   "author": "Nikita-Khromov",
   "license": "MIT",
   "dependencies": {
-		"crypto": "^1.0.1",
-		"http": "0.0.1-security",
-		"querystring": "^0.2.1"
-	},
+    "crypto": "^1.0.1",
+    "http": "0.0.1-security",
+    "querystring": "^0.2.1"
+  },
   "engines": {
     "node": "14.x"
   }

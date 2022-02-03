@@ -31,12 +31,16 @@ const server = http.createServer((request, response) => {
 		response.statusCode = 200
 		response.setHeader('Content-Type', 'text/plain')
 		response.setHeader('Access-Control-Allow-Origin', '*');
-		let signature = generateSignature(API_KEY, API_SECRET, meet_number, role_id)
-		response.end(signature);
+		if (data && API_KEY && API_SECRET && meet_number && role_id != undefined) {
+			let signature = generateSignature(API_KEY, API_SECRET, meet_number, role_id);
+			response.end(signature);
+		}
+		else
+			response.end('Invalid request, check your Api_key, Api_secret, Meeting number and role_id');
 	});
 })
 server.listen(process.env.PORT || 5000, hostname, () => {
-	console.log(`Server running at http://${hostname}:${process.env.PORT}/`)
+	console.log(`Server running at http://${hostname}:${process.env.PORT || 5000}/`)
 })
 
 
