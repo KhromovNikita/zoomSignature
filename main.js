@@ -1,6 +1,13 @@
-const https = require('https')
+const express = require('express');
 const crypto = require('crypto')
-var qs = require('querystring');
+var bodyParser = require('body-parser')
+const app = express()
+//app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+	extended: false
+}));
+const PORT = process.env.PORT || 5000
+let data, API_KEY, API_SECRET, meet_number, role_id;
 
 function generateSignature(apiKey, apiSecret, meetingNumber, role) {
 	const timestamp = new Date().getTime() - 30000
@@ -11,37 +18,33 @@ function generateSignature(apiKey, apiSecret, meetingNumber, role) {
 	return signature;
 }
 
- // server
-const hostname = '127.0.0.1'
-const server = https.createServer((request, response) => {
-	let data, API_KEY, API_SECRET, meet_number, role_id;
+app.get('/', (req, res) => {
+	res.send({ message: 'You should to use post request:)' });
+});
 
-	// загрузка данных
-	request.on("data", chunk => {
-		data += chunk;
-		data = qs.parse(data);
-		API_KEY = data["api_key"];
-		API_SECRET = data["api_secret"];
-		meet_number = data["meet_number"];
-		role_id = data["role_id"];
-	});
+app.post('/', (req, res) => {
+	// Здесь будем создавать заметку.
+	res.statusCode = 200
+	res.setHeader('Content-Type', 'text/plain')
+	res.setHeader('Access-Control-Allow-Origin', '*');
 
-	// в конце загрузки данных посылаем запрос по targetUrl
-	request.on("end", () => {
-		response.statusCode = 200
-		response.setHeader('Content-Type', 'text/plain')
-		response.setHeader('Access-Control-Allow-Origin', '*');
-		if (data && API_KEY && API_SECRET && meet_number && role_id != undefined) {
-			let signature = generateSignature(API_KEY, API_SECRET, meet_number, role_id);
-			response.end(signature);
-		}
-		else
-			response.end('Invalid request, check your Api_key, Api_secret, Meeting number and role_id');
-	});
-})
-server.listen(process.env.PORT || 5000, hostname, () => {
-	console.log(`Server running at https://${hostname}:${process.env.PORT || 5000}/`)
-})
+	data = req.body;
+	API_KEY = data["api_key"];
+	API_SECRET = data["api_secret"];
+	meet_number = data["meet_number"];
+	role_id = data["role_id"];
+
+	if (data && API_KEY && API_SECRET && meet_number && role_id != undefined) {
+		res.send(generateSignature(API_KEY, API_SECRET, meet_number, role_id));
+	}
+	else
+		res.send("Failed! Check your posted data.")
+
+});
+
+app.listen(PORT, () => {
+	console.log('We are live on ' + PORT);
+});
 
 
 
