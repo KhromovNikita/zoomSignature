@@ -13,7 +13,6 @@ function generateSignature(apiKey, apiSecret, meetingNumber, role) {
 
  // server
 const hostname = '127.0.0.1'
-const port = process.env.PORT || 8000
 const server = http.createServer((request, response) => {
 	let data, API_KEY, API_SECRET, meet_number, role_id;
 
@@ -36,7 +35,7 @@ const server = http.createServer((request, response) => {
 		response.end(signature);
 	});
 })
-server.listen(port, hostname, () => {
+server.listen(process.env.PORT || 5000, hostname, () => {
 	console.log(`Server running at http://${hostname}:${port}/`)
 })
 
